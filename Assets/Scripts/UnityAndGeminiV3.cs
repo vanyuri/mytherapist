@@ -102,10 +102,13 @@ public class UnityAndGeminiV3 : MonoBehaviour
             TextResponse response = JsonUtility.FromJson<TextResponse>(www.downloadHandler.text);
             string reply = response?.candidates?[0]?.content?.parts?[0]?.text?.Trim();
 
+
             if (!string.IsNullOrEmpty(reply))
             {
                 Debug.Log("[FULL] Full AI Response:\n" + reply);
                 outputText.text = reply;
+
+                GameManager.Instance.UpdatePatientReply(reply);
 
                 chatHistory.Add(new TextContent
                 {

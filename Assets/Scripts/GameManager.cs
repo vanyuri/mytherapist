@@ -1,6 +1,7 @@
-﻿//GMC_105
+﻿// GMC_108
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
@@ -18,11 +19,14 @@ public class GameManager : MonoBehaviour
     public string doctorSpecialty = "Clinical Psychology";
 
     [Header("UI")]
-    public Slider emotionSlider; // 👈 Assign in the Inspector
-    public Button nextPatientButton; // 👈 Assign in the Inspector
+    public Slider emotionSlider; // 👈 Assign in Inspector
+    public Button nextPatientButton; // 👈 Assign in Inspector
+    public TextMeshProUGUI patientNameText; // 👈 Assign in Inspector
+    public TextMeshProUGUI patientReplyText; // 👈 Assign in Inspector
+    public List<GameObject> patientImages; // 👈 Assign images in order of patients
 
     [Header("AI Script Reference")]
-    public UnityAndGeminiV3 aiScript; // 👈 Drag the AI script here in Inspector
+    public UnityAndGeminiV3 aiScript; // 👈 Assign in Inspector
 
     void Awake()
     {
@@ -35,15 +39,18 @@ public class GameManager : MonoBehaviour
 
             if (allPatients.Count > 0)
             {
-                currentPatientIndex = 0; // 👈 Start with first patient (Anna)
+                currentPatientIndex = 0;
                 Debug.Log($"Starting with patient: {CurrentPatient.name}");
 
                 UpdateEmotionSlider();
                 UpdateNextButton();
+                UpdatePatientNameUI();
+                UpdatePatientReply(""); // Start empty
+                UpdatePatientImage();
 
                 if (aiScript != null)
                 {
-                    aiScript.ShowCurrentPatientIntro(); // 👈 Show intro on start
+                    aiScript.ShowCurrentPatientIntro();
                 }
             }
         }
@@ -90,14 +97,29 @@ public class GameManager : MonoBehaviour
             nextPatientButton.interactable = CurrentPatient.emotion >= 100f;
     }
 
+    private void UpdatePatientNameUI()
+    {
+        if (patientNameText != null)
+            patientNameText.text = CurrentPatient.name;
+    }
+
+    public void UpdatePatientReply(string reply)
+    {
+        if (patientReplyText != null)
+            patientReplyText.text = reply;
+    }
+
+    private void UpdatePatientImage()
+    {
+        for (int i = 0; i < patientImages.Count; i++)
+        {
+            if (patientImages[i] != null)
+                patientImages[i].SetActive(i == currentPatientIndex);
+        }
+    }
+
     public void MoveToNextPatient()
     {
-
-        if (aiScript != null)
-        {
-            aiScript.ShowCurrentPatientIntro(); // 👈 THIS must run when switching
-        }
-
         if (currentPatientIndex + 1 < allPatients.Count)
         {
             currentPatientIndex++;
@@ -105,10 +127,13 @@ public class GameManager : MonoBehaviour
 
             UpdateEmotionSlider();
             UpdateNextButton();
+            UpdatePatientNameUI();
+            UpdatePatientReply(CurrentPatient.scriptedIntro);
+            UpdatePatientImage();
 
             if (aiScript != null)
             {
-                aiScript.ShowCurrentPatientIntro(); // 👈 Show new intro
+                aiScript.ShowCurrentPatientIntro();
             }
         }
         else
