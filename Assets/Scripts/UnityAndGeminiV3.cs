@@ -1,5 +1,4 @@
-﻿// ID: UGC_104
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Networking;
 using TMPro;
 using System.Collections;
@@ -29,6 +28,9 @@ public class UnityAndGeminiV3 : MonoBehaviour
     public TMP_InputField inputField;
     public TMP_Text outputText;
 
+    [Header("Voice")]
+    public ElevenLabsTTS elevenLabsTTS; // Drag your ElevenLabsTTS GameObject here
+
     private List<TextContent> chatHistory = new();
 
     void Start()
@@ -57,7 +59,7 @@ public class UnityAndGeminiV3 : MonoBehaviour
 
         if (string.IsNullOrEmpty(userMessage))
         {
-            Debug.Log("[UGC_104] Input is empty, skipping send.");
+            Debug.Log("[UGC_105] Input is empty, skipping send.");
             return;
         }
 
@@ -95,20 +97,16 @@ public class UnityAndGeminiV3 : MonoBehaviour
 
         if (www.result != UnityWebRequest.Result.Success)
         {
-            Debug.LogError("[UGC_104] API Error: " + www.error);
+            Debug.LogError("[UGC_105] API Error: " + www.error);
         }
         else
         {
             TextResponse response = JsonUtility.FromJson<TextResponse>(www.downloadHandler.text);
             string reply = response?.candidates?[0]?.content?.parts?[0]?.text?.Trim();
 
-
             if (!string.IsNullOrEmpty(reply))
             {
-                Debug.Log("[FULL] Full AI Response:\n" + reply);
                 outputText.text = reply;
-
-                GameManager.Instance.UpdatePatientReply(reply);
 
                 chatHistory.Add(new TextContent
                 {
@@ -119,40 +117,34 @@ public class UnityAndGeminiV3 : MonoBehaviour
                 // Get current patient context
                 Patient currentPatient = GameManager.Instance.CurrentPatient;
 
-                // Evaluate emotion in separate script
+                // Evaluate emotion
                 EmotionEvaluator.Instance.EvaluateEmotion(playerInput, reply, currentPatient.promptContext, (resultTag) =>
                 {
-                    Debug.Log($"[EMOTION RESULT] Evaluation returned: {resultTag}");
                     GameManager.Instance.EvaluateEmotionFromTag(resultTag);
                 });
+
+                // 🗣️ Speak the AI response aloud
+                if (elevenLabsTTS != null)
+                {
+                    elevenLabsTTS.Speak(reply);
+                    Debug.Log("[UGC_105] Speaking AI response via ElevenLabs.");
+                }
+                else
+                {
+                    Debug.LogWarning("[UGC_105] ElevenLabsTTS is not assigned.");
+                }
             }
             else
             {
-                Debug.LogWarning("[UGC_104] No valid response from Gemini.");
+                Debug.LogWarning("[UGC_105] No valid response from Gemini.");
             }
         }
     }
 
-    public void ShowCurrentPatientIntro()
+    public void ResetConversation()
     {
-        Patient currentPatient = GameManager.Instance.CurrentPatient;
-
-        if (!string.IsNullOrEmpty(currentPatient.scriptedIntro))
-        {
-            chatHistory.Clear();
-            outputText.text = currentPatient.scriptedIntro;
-
-            Debug.Log($"[AI] Showing intro for {currentPatient.name}: {currentPatient.scriptedIntro}");
-
-            chatHistory.Add(new TextContent
-            {
-                role = "model",
-                parts = new[] { new TextPart { text = currentPatient.scriptedIntro } }
-            });
-        }
-        else
-        {
-            Debug.LogWarning($"[AI] No intro found for: {currentPatient.name}");
-        }
+        chatHistory.Clear();
+        outputText.text = GameManager.Instance.CurrentPatient.scriptedIntro;
+        Debug.Log("[UGC_105] Chat history cleared and intro message reloaded.");
     }
 }

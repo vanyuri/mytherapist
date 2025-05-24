@@ -7,10 +7,11 @@ using System.Collections.Generic;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
+    private float currentEmotion;
 
     [Header("Patient Management")]
     private List<Patient> allPatients;
-    public int currentPatientIndex = 0;
+    public int currentPatientIndex;
     public Patient CurrentPatient => allPatients[currentPatientIndex];
 
     [Header("Doctor Info")]
@@ -19,17 +20,17 @@ public class GameManager : MonoBehaviour
     public string doctorSpecialty = "Clinical Psychology";
 
     [Header("UI")]
-    public Slider emotionSlider; // 👈 Assign in Inspector
-    public Button nextPatientButton; // 👈 Assign in Inspector
-    public TextMeshProUGUI patientNameText; // 👈 Assign in Inspector
-    public TextMeshProUGUI patientReplyText; // 👈 Assign in Inspector
-    public List<GameObject> patientImages; // 👈 Assign images in order of patients
+    public Slider emotionSlider; 
+    public Button nextPatientButton; 
+    public TextMeshProUGUI patientNameText;
+    public TextMeshProUGUI patientReplyText; 
+    public List<GameObject> patientImages; 
 
-    [Header("AI Script Reference")]
-    public UnityAndGeminiV3 aiScript; // 👈 Assign in Inspector
 
     void Awake()
     {
+
+     
         if (Instance == null)
         {
             Instance = this;
@@ -42,16 +43,12 @@ public class GameManager : MonoBehaviour
                 currentPatientIndex = 0;
                 Debug.Log($"Starting with patient: {CurrentPatient.name}");
 
+                currentEmotion = CurrentPatient.emotion;
                 UpdateEmotionSlider();
                 UpdateNextButton();
                 UpdatePatientNameUI();
-                UpdatePatientReply(""); // Start empty
+                UpdatePatientReply(""); 
                 UpdatePatientImage();
-
-                if (aiScript != null)
-                {
-                    aiScript.ShowCurrentPatientIntro();
-                }
             }
         }
         else
@@ -67,7 +64,7 @@ public class GameManager : MonoBehaviour
         if (emotionTag.Contains("Good"))
             delta = Random.Range(5, 12);
         else if (emotionTag.Contains("Bad"))
-            delta = Random.Range(-10, 5);
+            delta = Random.Range(-10, -5);
         else
             delta = 0;
 
@@ -82,7 +79,11 @@ public class GameManager : MonoBehaviour
         if (CurrentPatient.emotion >= 100f)
             Debug.Log($"{CurrentPatient.name} is fully satisfied!");
         else if (CurrentPatient.emotion <= 0f)
+        {
+
             Debug.Log($"{CurrentPatient.name} is disengaged.");
+            RestartCurrentPatient();
+        }
     }
 
     private void UpdateEmotionSlider()
@@ -125,16 +126,13 @@ public class GameManager : MonoBehaviour
             currentPatientIndex++;
             Debug.Log($"Moved to patient: {CurrentPatient.name}");
 
+            currentEmotion = CurrentPatient.emotion;
+
             UpdateEmotionSlider();
             UpdateNextButton();
             UpdatePatientNameUI();
             UpdatePatientReply(CurrentPatient.scriptedIntro);
             UpdatePatientImage();
-
-            if (aiScript != null)
-            {
-                aiScript.ShowCurrentPatientIntro();
-            }
         }
         else
         {
@@ -142,4 +140,30 @@ public class GameManager : MonoBehaviour
             nextPatientButton.interactable = false;
         }
     }
+
+    public void RestartCurrentPatient()
+    {
+        Debug.Log($"Restarting patient: {CurrentPatient.name}");
+
+        // Reset emotion meter
+        CurrentPatient.emotion = currentEmotion;
+
+        // Reset UI
+        UpdateEmotionSlider();
+        UpdateNextButton();
+        UpdatePatientNameUI();
+        UpdatePatientImage();
+
+        // Reset conversation
+        UnityAndGeminiV3 chatHandler = FindObjectOfType<UnityAndGeminiV3>();
+        if (chatHandler != null)
+        {
+            chatHandler.ResetConversation();
+        }
+
+        // Show scripted intro again
+        UpdatePatientReply(CurrentPatient.scriptedIntro);
+    }
+
+    
 }

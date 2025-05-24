@@ -6,10 +6,10 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
+    path: Assets/Scenes/MainMenu.unity
+    guid: d59d0f1245de6404787adf70c79924f3
   - enabled: 1
-    path: Assets/Scenes/My_Therapist.unity
-    guid: 548850fbad4931042a369bfe1edef339
+    path: Assets/Scenes/Final.unity
+    guid: 5796054f8338a9542bb986962d9b883f
   m_configObjects:
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: e29371247adefc24db233d2a592a96eb, type: 2}
