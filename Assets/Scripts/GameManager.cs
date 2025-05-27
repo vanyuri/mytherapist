@@ -149,8 +149,8 @@ public class GameManager : MonoBehaviour
             UpdatePatientNameUI();
             UpdatePatientReply(CurrentPatient.scriptedIntro);
             UpdatePatientImage();
-            elevenLabsTTS.SetVoiceId(CurrentPatient.voice);
-            elevenLabsTTS.Speak(CurrentPatient.scriptedIntro);
+           // elevenLabsTTS.SetVoiceId(CurrentPatient.voice);
+           // elevenLabsTTS.Speak(CurrentPatient.scriptedIntro);
             CloseSessionCompletePanel();
 
         }
@@ -185,7 +185,7 @@ public class GameManager : MonoBehaviour
 
         // Show scripted intro again
         UpdatePatientReply(CurrentPatient.scriptedIntro);
-        elevenLabsTTS.Speak(CurrentPatient.scriptedIntro);
+       // elevenLabsTTS.Speak(CurrentPatient.scriptedIntro);
 
         menuPanel.SetActive(false);
         CloseGameOverPanel();

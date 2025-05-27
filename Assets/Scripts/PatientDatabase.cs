@@ -14,7 +14,7 @@ public static class PatientDatabase
             name = "Anna",
             issue = "Anxiety",
             personality = "Shy and polite",
-            emotion = 95f,
+            emotion = 60f,
             voice = "zrHiDhphv9ZnVXBqCLjz",
             scriptedIntro = "Hi... I'm Anna. I'm 19 years old, and honestly, I don’t know what to expect from this. I just know I struggle with anxiety and it feels like it's getting harder to deal with every day.",
             promptContext = "You are Anna, a 19-year-old girl with social anxiety. You are talking to your school psychiatrist. Respond as yourself, gently and honestly. Do NOT describe your actions. Do NOT include your name before replies. Just reply as if you're having a direct conversation. Do not use asterisks (*) for emphasis or formatting. Just speak plainly."
@@ -24,7 +24,7 @@ public static class PatientDatabase
             name = "Leo",
             issue = "Anger Management",
             personality = "Stubborn and blunt",
-            emotion = 10f,
+            emotion = 60f,
             voice = "VR6AewLTigWG4xSOukaG",
             scriptedIntro = "I’m Leo. I’m 17, and to be honest, I don’t see why I’m here. I was told to come, and now I’m stuck talking about feelings or whatever this is.",
             promptContext = "You are Leo, a 17-year-old student with anger issues. You are talking to your school psychiatrist. Be honest and blunt, but assume they mean well. Do NOT describe your actions. Do NOT include your name before replies. Just give a direct answer like in a real conversation. Do not use asterisks (*) for emphasis or formatting. Just speak plainly."

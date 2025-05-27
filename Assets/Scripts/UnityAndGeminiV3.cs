@@ -47,8 +47,8 @@ public class UnityAndGeminiV3 : MonoBehaviour
                 
                
                 outputText.text = currentPatient.scriptedIntro;
-                elevenLabsTTS.SetVoiceId(currentPatient.voice);
-                elevenLabsTTS.Speak(currentPatient.scriptedIntro);
+               // elevenLabsTTS.SetVoiceId(currentPatient.voice);
+               // elevenLabsTTS.Speak(currentPatient.scriptedIntro);
             }
         }
         else
@@ -131,8 +131,8 @@ public class UnityAndGeminiV3 : MonoBehaviour
                 // 🗣️ Speak the AI response aloud
                 if (elevenLabsTTS != null)
                 {
-                    elevenLabsTTS.SetVoiceId(currentPatient.voice);
-                    elevenLabsTTS.Speak(reply);
+                  //  elevenLabsTTS.SetVoiceId(currentPatient.voice);
+                  //  elevenLabsTTS.Speak(reply);
                     Debug.Log("[UGC_105] Speaking AI response via ElevenLabs.");
                 }
                 else
