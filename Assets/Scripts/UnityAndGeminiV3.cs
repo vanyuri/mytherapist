@@ -3,6 +3,7 @@ using UnityEngine.Networking;
 using TMPro;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
 [System.Serializable]
 public class UnityAndGeminiKey { public string key; }
@@ -29,7 +30,7 @@ public class UnityAndGeminiV3 : MonoBehaviour
     public TMP_Text outputText;
 
     [Header("Voice")]
-    public ElevenLabsTTS elevenLabsTTS; // Drag your ElevenLabsTTS GameObject here
+    public TextToSpeech elevenLabsTTS; // Drag your ElevenLabsTTS GameObject here
 
     private List<TextContent> chatHistory = new();
 
@@ -43,7 +44,11 @@ public class UnityAndGeminiV3 : MonoBehaviour
             Patient currentPatient = GameManager.Instance.CurrentPatient;
             if (!string.IsNullOrEmpty(currentPatient.scriptedIntro))
             {
+                
+               
                 outputText.text = currentPatient.scriptedIntro;
+                elevenLabsTTS.SetVoiceId(currentPatient.voice);
+                elevenLabsTTS.Speak(currentPatient.scriptedIntro);
             }
         }
         else
@@ -126,6 +131,7 @@ public class UnityAndGeminiV3 : MonoBehaviour
                 // 🗣️ Speak the AI response aloud
                 if (elevenLabsTTS != null)
                 {
+                    elevenLabsTTS.SetVoiceId(currentPatient.voice);
                     elevenLabsTTS.Speak(reply);
                     Debug.Log("[UGC_105] Speaking AI response via ElevenLabs.");
                 }

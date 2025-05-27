@@ -3,30 +3,28 @@ using UnityEngine.Networking;
 using System.Collections;
 using System.IO;
 
-public class ElevenLabsTTS : MonoBehaviour
+public class TextToSpeech : MonoBehaviour
 {
     /*
     Example voices:
     zrHiDhphv9ZnVXBqCLjz
     VR6AewLTigWG4xSOukaG
+
+    WAhoMTNdLdMoq1j3wf3I
     */
 
-    public string apiKey = "sk_1d339f04149df7eccb72c72491154b89e5240d972fb54c1a"; // Replace with your actual API key
-    public string voiceId; // Default voice ID
+    public string apiKey = "sk_6ed1f15ede723596e9341ad4c22fa6eece3e3a3f99b66248";
+    public string voiceId;
     public AudioSource audioSource;
 
     private string baseUrl = "https://api.elevenlabs.io/v1/text-to-speech/";
 
-    public static ElevenLabsTTS Instance;
+    public static TextToSpeech Instance;
 
 
     void Start()
     {
-        SetVoiceId("VR6AewLTigWG4xSOukaG");
-     
 
-        Speak("Hello, this is a test from ElevenLabs.");
-        
 
     }
 
@@ -113,7 +111,7 @@ public class ElevenLabsTTS : MonoBehaviour
     [System.Serializable]
     public class VoiceSettings
     {
-        public float stability = 0.5f;
-        public float similarity_boost = 0.5f;
+        public float stability = 0.15f;
+        public float similarity_boost = 0.8f;
     }
 }
